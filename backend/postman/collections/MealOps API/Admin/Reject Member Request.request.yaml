@@ -1,0 +1,10 @@
+$kind: http-request
+method: PUT
+url: '{{baseUrl}}/api/v1/admin/reject-req/:memberId'
+order: 4000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+pathVariables:
+  - key: memberId
+    value: 'member_id_here'

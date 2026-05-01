@@ -185,7 +185,6 @@ const removedMember = asyncHandler(async (req,res) => {
 const getVisibleMembers = asyncHandler(async (req, res) => {
 
   const user = req.member;
-  console.log(user);
   
   
   if (user.hassMess) {
@@ -197,10 +196,11 @@ const getVisibleMembers = asyncHandler(async (req, res) => {
     isActive: true,
   })
     .populate("userId", "fullname email")
-    .select("userId role");
+    .select("roleInMess");
+  const count = members.length;
   return res
     .status(200)
-    .json(new ApiResponse(200, { members }, 'All members fetched successfully'));
+    .json(new ApiResponse(200, { members,count }, 'All members fetched successfully'));
 });
 
 const getAllMembers = asyncHandler (async (req,res) => {
@@ -232,11 +232,21 @@ const getAllMembers = asyncHandler (async (req,res) => {
     .populate("userId", "fullname email")
     .sort({ createdAt: -1 })
     .select("phone status");
+    const count = members.length;
 
   return res.json(
-    new ApiResponse(200, members, "All members (admin)")
+    new ApiResponse(200, {members, count}, "All members (admin)")
   );
 
 })
 
-export { createMess,joinedMess,pendingRequests,approveMember,rejectMember,getAllMembers,getVisibleMembers,removedMember };
+const getMyInfo = asyncHandler (async (req,res ) => {
+  
+  const memberId = req.member._id;
+  const member = await Member.findById(memberId);
+  return res
+  .status(200)
+  .json(new ApiResponse(200, member,"Details fetched"))
+})
+
+export { createMess,joinedMess,pendingRequests,approveMember,rejectMember,getAllMembers,getVisibleMembers,removedMember,getMyInfo };

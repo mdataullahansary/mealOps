@@ -1,0 +1,8 @@
+$kind: http-request
+name: info
+url: "{{baseUrl}}/api/v1/member/allmembers"
+method: GET
+headers:
+  - key: Authorization
+    value: Bearer {{accessToken}}
+order: 1251

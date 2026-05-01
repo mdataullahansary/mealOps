@@ -1,0 +1,19 @@
+$kind: http-request
+method: PATCH
+url: '{{baseUrl}}/api/v1/bills/recurring-bills/:id'
+order: 3000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+  - key: Content-Type
+    value: application/json
+pathVariables:
+  - key: id
+    value: 'bill_id_here'
+body:
+  type: json
+  content: |-
+    {
+      "amount": 2200,
+      "dueDay": 12
+    }

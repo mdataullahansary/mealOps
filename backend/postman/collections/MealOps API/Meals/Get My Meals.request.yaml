@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get My Meals
+method: GET
+url: "{{baseUrl}}/api/v1/meals/get-my-meals?startDate=2026-04-01&endDate=202"
+queryParams:
+  startDate: 2026-04-01
+  endDate: "202"
+order: 4000
+headers:
+  Authorization: Bearer {{accessToken}}

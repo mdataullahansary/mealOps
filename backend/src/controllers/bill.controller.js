@@ -5,7 +5,6 @@ import { ApiError } from '../utils/apiError.js';
 import { RecurringBill } from '../models/bill.model.js';
 import { Member } from '../models/member.model.js';
 import { Expense } from '../models/expense.model.js';
-import { MemberDue } from '../models/memberDue.model.js';
 import { Mess } from '../models/mess.model.js';
 
 
@@ -79,77 +78,84 @@ const shouldRunToday = (bill, today) => {
 const generateMonthlyBills = asyncHandler(async (req, res) => {
   const today = new Date();
   const messId = req.messId;
+  console.log(messId);
+  
 
-  const bills = await RecurringBill.find({ messId, isActive: true });
-
-  if (!bills.length) {
-    return res.json(new ApiResponse(200, [], "No recurring bills"));
-  }
-
-  const createdExpenses = [];
-  const startOfDay = new Date(today);
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date(today);
-  endOfDay.setHours(23, 59, 59, 999);
-
-  for (const bill of bills) {
-    if (!shouldRunToday(bill, today)) continue;
-
-    const alreadyExists = await Expense.findOne({
-      recurringBill: bill._id,
-      expenseDate: {
-        $gte: startOfDay,
-        $lte: endOfDay,
-      },
-    });
-
-    if (alreadyExists) continue;
-
-    const members = await Member.find({
-      messId: bill.messId,
-      isActive: true,
-    });
-
-    if (!members.length) continue;
-
-    const expense = await Expense.create({
-      messId: bill.messId,
-      recurringBill: bill._id,
-      title: bill.vendorName,
-      category: bill.category,
-      totalAmount: bill.amount,
-      expenseDate: today,
-    });
-
-    let dues = [];
-
-    if (bill.splitType === "EQUAL" || bill.splitType === "PERMEAL") {
-      const perHead = bill.amount / members.length;
-      dues = members.map((m) => ({
+  try {
+    const bills = await RecurringBill.find({ messId, isActive: true });
+  
+    if (!bills.length) {
+      return res.json(new ApiResponse(200, [], "No recurring bills"));
+    }
+  
+    const createdExpenses = [];
+    const startOfDay = new Date(today);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999);
+  
+    for (const bill of bills) {
+      //if (!shouldRunToday(bill, today)) continue;
+  
+      const alreadyExists = await Expense.findOne({
+        recurringBill: bill._id,
+        expenseDate: {
+          $gte: startOfDay,
+          $lte: endOfDay,
+        },
+      });
+  
+      if (alreadyExists) continue;
+      console.log('I am here');
+      
+      const members = await Member.find({
         messId: bill.messId,
-        member: m._id,
-        expense: expense._id,
-        amount: perHead,
-      }));
-    }
-
-    if (bill.splitType === "CUSTOM") {
-      dues = bill.customSplit.map((cs) => ({
+        isActive: true,
+      });
+  
+      if (!members.length) continue;
+  
+      const expense = await Expense.create({
         messId: bill.messId,
-        member: cs.member,
-        expense: expense._id,
-        amount: (bill.amount * cs.percentage) / 100,
-      }));
+        recurringBill: bill._id,
+        title: bill.vendorName,
+        category: bill.category,
+        totalAmount: bill.amount,
+        expenseDate: today,
+      });
+  
+      let dues = [];
+  
+      if (bill.splitType === "EQUAL" || bill.splitType === "PERMEAL") {
+        const perHead = bill.amount / members.length;
+        dues = members.map((m) => ({
+          messId: bill.messId,
+          member: m._id,
+          expense: expense._id,
+          amount: perHead,
+        }));
+      }
+  
+      if (bill.splitType === "CUSTOM") {
+        dues = bill.customSplit.map((cs) => ({
+          messId: bill.messId,
+          member: cs.member,
+          expense: expense._id,
+          amount: (bill.amount * cs.percentage) / 100,
+        }));
+      }
+  
+      if (dues.length) {
+        await MemberDue.insertMany(dues);
+      }
+  
+      createdExpenses.push(expense);
     }
-
-    if (dues.length) {
-      await MemberDue.insertMany(dues);
-    }
-
-    createdExpenses.push(expense);
+  
+    return res.json(new ApiResponse(200, createdExpenses, "Recurring bills processed"));
+  } catch (error) {
+    throw new ApiError(401, error ,"Failed to generate Bill.")
   }
-
-  return res.json(new ApiResponse(200, createdExpenses, "Recurring bills processed"));
 });
 const toggleRecurringBill = asyncHandler(async (req, res) => {
   const bill = await RecurringBill.findOne({

@@ -1,0 +1,10 @@
+$kind: http-request
+method: PUT
+url: '{{baseUrl}}/api/v1/member/join-mess/:code'
+order: 3000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+pathVariables:
+  - key: code
+    value: 'mess_code_here'

@@ -20,7 +20,7 @@ const isAfterCutoff = (mealType, date) => {
   cutoff.setHours(cutoffConfig.hour);
   cutoff.setMinutes(cutoffConfig.minute);
   cutoff.setSeconds(0);
-
+  
   return now > cutoff;
 };
 

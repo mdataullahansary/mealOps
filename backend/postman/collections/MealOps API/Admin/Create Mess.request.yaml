@@ -1,0 +1,17 @@
+$kind: http-request
+method: PUT
+url: '{{baseUrl}}/api/v1/admin/create-mess'
+order: 1000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Demo Mess",
+      "address": "Dhaka",
+      "monthlyBudget": 50000
+    }

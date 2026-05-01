@@ -3,20 +3,20 @@ import mongoose, { Schema } from "mongoose";
 const expenseSchema = new mongoose.Schema(
 {
   messId: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Mess",
     required: true,
   },
 
   createdBy: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Member",
     required: true,
   },
 
   // 🔹 who initially paid (manager case)
   paidBy: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Member",
     required: true,
   },
@@ -40,7 +40,7 @@ const expenseSchema = new mongoose.Schema(
   },
 
   approvedBy: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
 
@@ -50,7 +50,7 @@ const expenseSchema = new mongoose.Schema(
 
   items: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "ExpenseItem",
     },
   ],

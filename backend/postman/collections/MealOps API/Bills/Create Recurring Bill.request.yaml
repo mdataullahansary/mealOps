@@ -1,0 +1,18 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/api/v1/bills/recurring-bills'
+order: 1000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Internet Bill",
+      "amount": 2000,
+      "dueDay": 10,
+      "vendor": "ISP Provider"
+    }

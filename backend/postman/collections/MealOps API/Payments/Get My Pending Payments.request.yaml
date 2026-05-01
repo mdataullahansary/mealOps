@@ -1,0 +1,7 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/api/v1/payment/my-pending'
+order: 3000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'

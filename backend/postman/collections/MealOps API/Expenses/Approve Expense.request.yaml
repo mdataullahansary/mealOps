@@ -1,0 +1,10 @@
+$kind: http-request
+method: PATCH
+url: '{{baseUrl}}/api/v1/expanses/expanses/:id/approve'
+order: 3000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+pathVariables:
+  - key: id
+    value: 'expense_id_here'

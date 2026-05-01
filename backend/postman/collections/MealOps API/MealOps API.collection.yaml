@@ -1,0 +1,9 @@
+$schema: 'https://schema.postman.com/json/collection/v2.1.0/collection.json'
+$kind: 'collection'
+version: '3.0'
+name: 'MealOps API'
+variable:
+  - key: 'baseUrl'
+    value: 'http://localhost:8000/api/v1'
+  - key: 'accessToken'
+    value: ''

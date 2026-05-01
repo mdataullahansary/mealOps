@@ -1,0 +1,10 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/api/v1/payment/confirm/:paymentId'
+order: 4000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+pathVariables:
+  - key: paymentId
+    value: 'payment_id_here'

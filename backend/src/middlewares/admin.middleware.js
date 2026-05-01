@@ -3,6 +3,8 @@ import { ApiError } from "../utils/ApiError.js";
 import {User} from "../models/user.model.js";
 
 const verifyAdmin = asyncHandler(async(req, _, next) => {
+    console.log('Verifying admin....');
+    
     const user = req.user;  
     if(!user){
         throw new ApiError(401, "Unauthorized: No user information found")

@@ -1,0 +1,16 @@
+$kind: http-request
+method: PATCH
+url: '{{baseUrl}}/api/v1/meals/resume'
+order: 3000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "startDate": "2026-05-01",
+      "endDate": "2026-05-07"
+    }

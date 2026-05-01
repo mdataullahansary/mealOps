@@ -35,4 +35,4 @@ const expenseItemSchema = new mongoose.Schema({
     type: String, // optional shop name
   },
 }, { timestamps: true });
-export const ExpenseItem = mongoose.model("ExpenseItem", itemSchema);
+export const ExpenseItem = mongoose.model("ExpenseItem", expenseItemSchema);

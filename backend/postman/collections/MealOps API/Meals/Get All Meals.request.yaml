@@ -1,0 +1,7 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/api/v1/meals/allmeals'
+order: 5000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'

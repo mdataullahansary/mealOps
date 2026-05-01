@@ -61,12 +61,15 @@ const createMenu = asyncHandler(async (req, res) => {
 
 const toggleMeal = asyncHandler(async (req, res) => {
   const { date, mealType, status, mode } = req.body;
+
  if(isAfterCutoff(mealType,date)) {
+  
+  
   return res.status(400).json(new ApiResponse(200, "Time exceed"))
  }
 
  if (mode === "continuous") {
-    await Member.findOneAndUpdate(
+    const member = await Member.findOneAndUpdate(
       { userId: req.member._id },
       { mealPreference: status ? "active" : "paused" }
     );
@@ -83,18 +86,33 @@ const toggleMeal = asyncHandler(async (req, res) => {
       userId: req.member._id,
       messId: req.messId,
       date,
-      lunch: true,
-      dinner: true
     });
+
+
+    if(mealType == "lunch") {
+   meal.lunch = !meal.lunch
+ }
+
+ if(mealType == "dinner") {
+   meal.dinner = !meal.dinner
+   meal.lunch = !meal.lunch
+ }
   }
- meal[mealType] = status;
+ if(mealType == "lunch") {
+   meal.lunch = !meal.lunch
+ }
+
+ if(mealType == "dinner") {
+   meal.dinner = !meal.dinner
+ }
+ 
   meal.override = true;
 
   await meal.save();
 
   res
   .status(200)
-  .json(new ApiResponse(200, "Meal Updated"))
+  .json(new ApiResponse(200,meal, `Meal Updated : ${mealType} - ${status}`))
 
 
 
@@ -116,7 +134,9 @@ const skipMeals = asyncHandler(async (req, res) => {
 });
 const getMyMeals = asyncHandler(async (req, res) => {
   const { startDate, endDate } = req.query;
-
+ if(!startDate && !endDate) {
+  throw ApiError (401, "Start date and End Dates are required")
+ }
   const meals = await Meal.find({
     userId: req.member._id,
     date: { $gte: startDate, $lte: endDate }
@@ -133,11 +153,29 @@ const getAllmeals = asyncHandler(async (req, res) => {
   const meals = await Meal.find({
     messId: req.messId,
     date
-  }).populate("userId", "name");
+  }).select("lunch dinner")
+  .populate({path:"userId", select:"roleInMess",
+    populate : 
+      {path:"userId",
+      select : "fullname"
+    }
+  });
+
+  
+   let lunch = 0, dinner = 0;
+ 
+   meals.forEach(m => {
+     if (m.lunch) lunch++;
+     if (m.dinner) dinner++;
+   });
 
   res
   .status(200)
-  .json(new ApiResponse(200, meals,"Fetch Successfully"));
+  .json(new ApiResponse(200, {meals,
+    totalLunch: lunch,
+     totalDinner: dinner,
+     totalMeals: lunch + dinner },
+     "Fetch Successfully"));
 });
 
 const getSummery = asyncHandler(async (req, res) => {

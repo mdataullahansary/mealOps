@@ -22,8 +22,9 @@ import { ExpenseItem } from "../models/expenseItem.model.js";
     // Create empty expense first
     const [expense] = await Expense.create(
       [{
-        messId: req.user.messId,
+        messId: req.messId,
         createdBy: req.user._id,
+        paidBy: req.member._id,
         title,
         category,
         expenseDate,

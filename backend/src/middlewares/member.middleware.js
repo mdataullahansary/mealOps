@@ -4,6 +4,8 @@ import { ApiError } from "../utils/apiError.js";
 
 export const requireActiveMember = async (req, _, next) => {
   const user = req.user
+  console.log('Verifying Active member..');
+  
   
   
   // if(!user.hasMess) {

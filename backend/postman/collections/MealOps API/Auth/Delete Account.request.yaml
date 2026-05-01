@@ -1,0 +1,7 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/api/v1/auth/delete'
+order: 4000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'

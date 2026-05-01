@@ -22,7 +22,7 @@ import authRouter from "./routes/auth.routes.js";
 import adminRouter from "./routes/admin.route.js";
 import memberRouter from "./routes/member.routes.js"
 import mealsRouter from "./routes/meal.routes.js"
-import expansesRouter from "./routes/meal.routes.js"
+import expansesRouter from "./routes/expense.routes.js"
 import monthlyRouter from "./routes/monthly.routes.js"
 import billsRouter from "./routes/bills.route.js"
 import paymentRouter from "./routes/payment.routes.js"

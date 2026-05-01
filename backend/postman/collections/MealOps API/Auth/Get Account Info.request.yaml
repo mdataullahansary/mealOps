@@ -1,0 +1,7 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/api/v1/auth/account-info'
+order: 6000
+headers:
+  - key: Authorization
+    value: 'Bearer {{accessToken}}'
